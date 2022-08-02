@@ -31,8 +31,8 @@ parser.add_argument('version', type=str, nargs='?', metavar='version', help='ver
 parser.add_argument('--is_update', action='store_true', default=False, dest='is_update', help='version update')
 args = parser.parse_args()
 
-if args.version == None:
-    print("Usage: python"+os.path.basename(__file__)+" <version> <--is_update>")
+if args.version is None:
+    print(f"Usage: python{os.path.basename(__file__)} <version> <--is_update>")
     sys.exit()
 
 ################################
@@ -41,7 +41,7 @@ if args.version == None:
 
 def rename_crd(crdname):
     tk = re.split('[_.]', crdname)
-    return tk[1]+"_operator_"+tk[2]+"_"+tk[3]+".crd.yaml"
+    return f"{tk[1]}_operator_{tk[2]}_{tk[3]}.crd.yaml"
 
 def find_deployment(source):
     for filename in os.listdir(source):

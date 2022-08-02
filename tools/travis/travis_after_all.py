@@ -82,12 +82,19 @@ def matrix_snapshot(travis_token):
     """
     :return: Matrix List
     """
-    headers = {'content-type': 'application/json', 'Authorization': 'token {}'.format(travis_token)}
+    headers = {
+        'content-type': 'application/json',
+        'Authorization': f'token {travis_token}',
+    }
+
     req = urllib2.Request("{0}/builds/{1}".format(travis_entry, build_id), headers=headers)
     response = urllib2.urlopen(req).read()
     raw_json = json.loads(response.decode('utf-8'))
-    matrix_without_leader = [MatrixElement(job) for job in raw_json["matrix"] if not is_leader(job['number'])]
-    return matrix_without_leader
+    return [
+        MatrixElement(job)
+        for job in raw_json["matrix"]
+        if not is_leader(job['number'])
+    ]
 
 
 def wait_others_to_finish(travis_token):
@@ -117,9 +124,7 @@ def get_token():
 
     req = urllib2.Request("{0}/auth/github".format(travis_entry), json.dumps(data).encode('utf-8'), headers)
     response = urllib2.urlopen(req).read()
-    travis_token = json.loads(response.decode('utf-8')).get('access_token')
-
-    return travis_token
+    return json.loads(response.decode('utf-8')).get('access_token')
 
 
 try:
